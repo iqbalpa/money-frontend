@@ -62,9 +62,14 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <AuthContext.Provider value={{ user, setUser(user){
-          login(user);
-        } }}>
+        <AuthContext.Provider
+          value={{
+            user,
+            setUser(user) {
+              login(user);
+            },
+          }}
+        >
           {children}
         </AuthContext.Provider>
       </body>
