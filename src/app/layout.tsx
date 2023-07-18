@@ -1,3 +1,5 @@
+'use client';
+
 import { Metadata } from 'next';
 import * as React from 'react';
 
@@ -6,6 +8,9 @@ import '@/styles/globals.css';
 import '@/styles/colors.css';
 
 import { siteConfig } from '@/constant/config';
+
+import { AuthContext } from '@/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 // !STARTERCONF Change these default meta
 // !STARTERCONF Look at @/constant/config to change them
@@ -53,9 +58,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { user, login, logout } = useAuth();
   return (
     <html>
-      <body>{children}</body>
+      <body>
+        <AuthContext.Provider value={{ user, setUser(user){
+          login(user);
+        } }}>
+          {children}
+        </AuthContext.Provider>
+      </body>
     </html>
   );
 }

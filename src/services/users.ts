@@ -19,7 +19,7 @@ export const signup = async (newUser: User) => {
   return response.data;
 };
 
-export const login = async (credentials: {
+export const signin = async (credentials: {
   username: string;
   password: string;
 }) => {

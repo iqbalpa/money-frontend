@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { login } from '@/services/users';
+import { signin } from '@/services/users';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function SigninPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,10 +22,12 @@ export default function SigninPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await login({ username, password });
+      const res = await signin({ username, password });
+      console.log(res);
+      login(res);
       toast.success('Login successfully');
     } catch (err: any) {
-      toast.error(err.response.data.error);
+      toast.error(err.message);
       console.log(err);
     }
   };
