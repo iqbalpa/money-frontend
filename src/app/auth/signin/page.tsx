@@ -23,12 +23,13 @@ export default function SigninPage() {
     e.preventDefault();
     try {
       const res = await signin({ username, password });
-      console.log(res);
       login(res);
       toast.success('Login successfully');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 3000);
     } catch (err: any) {
       toast.error(err.message);
-      console.log(err);
     }
   };
 
