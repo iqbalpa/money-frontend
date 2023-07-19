@@ -3,7 +3,11 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function Header() {
   const { user, logout } = useAuth();
-  console.log(user);
+  
+  // If user is null, render a loading state or return null
+  if (user === null) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <header className='flex items-center justify-between bg-gray-100 p-5'>

@@ -58,16 +58,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, login, logout } = useAuth();
+  const { user } = useAuth();
   return (
     <html>
       <body>
         <AuthContext.Provider
           value={{
             user,
-            setUser(user) {
-              login(user);
-            },
+            setUser: () => {},
           }}
         >
           {children}
