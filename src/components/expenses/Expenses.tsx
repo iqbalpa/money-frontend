@@ -1,7 +1,16 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { ExpenseResponse } from '@/constant/type';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 export default function Expenses() {
+  const [amount, setAmount] = useState<number>(0);
+  const [category, setCategory] = useState<string>('');
+  const [isExpense, setIsExpense] = useState<boolean>(true);
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(parseInt(e.target.value));
+  };
   const dummyExpenses: ExpenseResponse[] = [
     {
       amount: 100000,
@@ -29,11 +38,30 @@ export default function Expenses() {
     },
   ];
 
+  const handleClick = () => {
+    const category = (document.getElementById('category') as HTMLInputElement)
+      .value;
+    const isExpense =
+      (document.getElementById('isExpense') as HTMLInputElement).value ===
+      'true'
+        ? true
+        : false;
+    setTimeout(() => {
+      const modal = document.getElementById('my_modal_6') as HTMLInputElement;
+      modal.checked = false;
+    }, 3000);
+  };
+
   return (
     <>
-      <div className='flex flex-col max-w-3xl'>
+      <div className='flex max-w-3xl flex-col'>
         <div className='overflow-x-auto'>
           <div className='inline-block w-full p-1.5 align-middle'>
+            {/* The button to open modal */}
+            <label htmlFor='my_modal_6' className='btn mb-2'>
+              New Expense &nbsp;
+              <AiOutlinePlus />
+            </label>
             <div className='overflow-hidden rounded-lg border'>
               <table className='min-w-full divide-y divide-gray-200'>
                 <thead className='bg-gray-50'>
@@ -106,6 +134,47 @@ export default function Expenses() {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* MODAL */}
+      <input type='checkbox' id='my_modal_6' className='modal-toggle' />
+      <div className='modal'>
+        <div className='modal-box'>
+          <h3 className='mb-3 text-lg font-bold'>Create New Record</h3>
+          <input
+            type='number'
+            placeholder='Amount'
+            className='input input-bordered mb-2 w-full max-w-lg'
+          />
+          <select
+            id='category'
+            className='mb-2 w-full max-w-lg rounded-lg border border-slate-300 py-3'
+          >
+            <option selected>Choose category</option>
+            <option value='salary'>Salary</option>
+            <option value='food'>Food</option>
+            <option value='transportation'>Transportation</option>
+            <option value='education'>Education</option>
+            <option value='entertainment'>Entertrainment</option>
+            <option value='others'>Others</option>
+          </select>
+          <select
+            id='isExpense'
+            className='w-full max-w-lg rounded-lg border border-slate-300 py-3'
+          >
+            <option selected>Choose type</option>
+            <option value='true'>Expense</option>
+            <option value='false'>Income</option>
+          </select>
+          <div className='modal-action flex flex-row justify-between'>
+            <label htmlFor='my_modal_6' className='btn'>
+              Close!
+            </label>
+            <button onClick={handleClick} className='btn btn-primary'>
+              Save
+            </button>
           </div>
         </div>
       </div>
