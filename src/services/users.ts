@@ -1,11 +1,5 @@
 import axios from 'axios';
-
-interface User {
-  name: string;
-  username: string;
-  password: string;
-  age: number;
-}
+import { User } from '@/constant/type';
 
 const BASE_URL = 'http://localhost:3003/api/users';
 
