@@ -7,7 +7,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import Router from 'next/router';
 import auth from '@/services/auth';
 import toast from 'react-hot-toast';
 import { useLocalStorage } from 'usehooks-ts';
@@ -49,8 +48,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             age: res.age,
             token: res.token,
           });
-
-          Router.push('/dashboard');
         }
       })
       .catch((err) => {
@@ -64,7 +61,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
-    Router.push('/auth/signin');
+    setTimeout(() => {
+      toast.success('Logout successfully');
+    }, 1500);
   };
 
   return (

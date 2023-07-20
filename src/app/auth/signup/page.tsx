@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { signup } from '@/services/auth';
+import authService from '@/services/auth';
 import { User } from '../interface';
 import { useRouter } from 'next/navigation';
 
@@ -40,7 +40,7 @@ export default function SignupPage() {
       age,
     };
     try {
-      await signup(user);
+      await authService.signup(user);
       toast.success('Sign up successfully');
       setTimeout(() => {
         router.push('/auth/signin');

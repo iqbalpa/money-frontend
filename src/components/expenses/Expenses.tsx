@@ -6,8 +6,6 @@ import { AiOutlinePlus } from 'react-icons/ai';
 
 export default function Expenses() {
   const [amount, setAmount] = useState<number>(0);
-  const [category, setCategory] = useState<string>('');
-  const [isExpense, setIsExpense] = useState<boolean>(true);
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(parseInt(e.target.value));
   };
@@ -147,12 +145,13 @@ export default function Expenses() {
             type='number'
             placeholder='Amount'
             className='input input-bordered mb-2 w-full max-w-lg'
+            onChange={handleAmountChange}
           />
           <select
             id='category'
             className='mb-2 w-full max-w-lg rounded-lg border border-slate-300 py-3'
           >
-            <option selected>Choose category</option>
+            <option defaultChecked>Choose category</option>
             <option value='salary'>Salary</option>
             <option value='food'>Food</option>
             <option value='transportation'>Transportation</option>
@@ -164,7 +163,7 @@ export default function Expenses() {
             id='isExpense'
             className='w-full max-w-lg rounded-lg border border-slate-300 py-3'
           >
-            <option selected>Choose type</option>
+            <option defaultChecked>Choose type</option>
             <option value='true'>Expense</option>
             <option value='false'>Income</option>
           </select>

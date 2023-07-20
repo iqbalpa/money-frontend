@@ -18,12 +18,10 @@ export default function SigninPage() {
     setPassword(e.target.value);
   };
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await auth.login(username, password);
-      console.log(auth.user);
 
       toast.success('Login successfully');
       setTimeout(() => {
