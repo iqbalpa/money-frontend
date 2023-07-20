@@ -1,48 +1,34 @@
 'use client';
 
 import React from 'react';
-import { MdFastfood } from 'react-icons/md';
-import { AiFillCar } from 'react-icons/ai';
-import { AiFillBook } from 'react-icons/ai';
-import ProgressBar from '@ramonak/react-progress-bar';
+
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 export default function Statistics() {
+  const MAX_PER_DAY = 1_000_000;
+  const todayExpense = 570_000;
+  const percentage = Math.round((todayExpense / MAX_PER_DAY) * 100);
+
   return (
     <>
-      <table className='m-5 table-auto'>
-        <thead>
-          <tr>
-            <td className='border px-4 py-2'>icon</td>
-            <td className='w-60 border px-4 py-2 text-center'>bar chart</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className='border px-4 py-2'>
-              <MdFastfood size={30} />
-            </td>
-            <td className='border px-4 py-2'>
-              <ProgressBar customLabel='_' completed={75} />
-            </td>
-          </tr>
-          <tr>
-            <td className='border px-4 py-2'>
-              <AiFillCar size={30} />
-            </td>
-            <td className='border px-4 py-2'>
-              <ProgressBar customLabel='_' completed={5} />
-            </td>
-          </tr>
-          <tr>
-            <td className='border px-4 py-2'>
-              <AiFillBook size={30} />
-            </td>
-            <td className='border px-4 py-2'>
-              <ProgressBar customLabel='_' completed={55} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div className='m-5 flex flex-col items-center justify-center'>
+        <div className='h-[25vh] w-[25vh]'>
+          <CircularProgressbar value={percentage} text={`${percentage}%`} />
+        </div>
+        <div className='text-md m-2'>
+          <p>
+            Today expenses:{' '}
+            <span className='text-red-600'>Rp{todayExpense}</span>
+          </p>
+          <p>
+            Amount left to spend:{' '}
+            <span className='text-blue-600'>
+              Rp{MAX_PER_DAY - todayExpense}
+            </span>
+          </p>
+        </div>
+      </div>
     </>
   );
 }

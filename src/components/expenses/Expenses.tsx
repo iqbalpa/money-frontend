@@ -31,7 +31,7 @@ export default function Expenses() {
 
   return (
     <>
-      <div className='flex flex-col'>
+      <div className='flex flex-col max-w-3xl'>
         <div className='overflow-x-auto'>
           <div className='inline-block w-full p-1.5 align-middle'>
             <div className='overflow-hidden rounded-lg border'>
@@ -76,9 +76,15 @@ export default function Expenses() {
                       <td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800'>
                         {expense.date.split('T')[0]}
                       </td>
-                      <td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800'>
-                        {expense.amount}
-                      </td>
+                      {expense.isExpense ? (
+                        <td className='whitespace-nowrap px-6 py-4 text-sm text-red-600'>
+                          -{expense.amount}
+                        </td>
+                      ) : (
+                        <td className='whitespace-nowrap px-6 py-4 text-sm text-green-600'>
+                          +{expense.amount}
+                        </td>
+                      )}
                       <td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800'>
                         {expense.category}
                       </td>
