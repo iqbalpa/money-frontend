@@ -9,9 +9,6 @@ import '@/styles/colors.css';
 
 import { siteConfig } from '@/constant/config';
 
-import { AuthContext } from '@/context/AuthContext';
-import { useAuth } from '@/hooks/useAuth';
-
 // !STARTERCONF Change these default meta
 // !STARTERCONF Look at @/constant/config to change them
 export const metadata: Metadata = {
@@ -58,19 +55,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useAuth();
   return (
     <html>
-      <body>
-        <AuthContext.Provider
-          value={{
-            user,
-            setUser: () => {},
-          }}
-        >
-          {children}
-        </AuthContext.Provider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

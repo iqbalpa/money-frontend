@@ -5,11 +5,11 @@ import { signin } from '@/services/users';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '@/hooks/useAuth';
+// import { useAuth } from '@/hooks/useAuth';
 
 export default function SigninPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  // const { login } = useAuth();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +23,7 @@ export default function SigninPage() {
     e.preventDefault();
     try {
       const res = await signin({ username, password });
-      login(res);
+      // login(res);
       toast.success('Login successfully');
       setTimeout(() => {
         router.push('/dashboard');
