@@ -7,14 +7,14 @@ export default function Header() {
         <h1 className='ml-2 text-xl font-bold'>Money+</h1>
       </div>
       <nav>
-        <ul className='flex'>
-          <li className='ml-5'>
+        <ul className='flex flex-row items-center duration-100'>
+          <li className='ml-5 hover:scale-105'>
             <a href='/'>Home</a>
           </li>
-          <li className='ml-5'>
-            <a href='/about'>About</a>
+          <li className='ml-5 hover:scale-105'>
+            <a href='/profile'>Profile</a>
           </li>
-          <li className='ml-5'>
+          <li className='ml-5 rounded-md bg-red-500 px-4 py-2 font-bold text-white hover:scale-105 hover:bg-red-700'>
             <button onClick={() => {}}>Logout</button>
           </li>
         </ul>
