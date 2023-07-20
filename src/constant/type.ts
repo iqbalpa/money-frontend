@@ -10,7 +10,7 @@ export interface Expense {
   date: string;
   category: string;
   isExpense: boolean;
-  userId: string;
+  user: string;
 }
 
 // for get request from server

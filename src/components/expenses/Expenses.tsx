@@ -1,11 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ExpenseResponse } from '@/constant/type';
+import React, { use, useState, useEffect } from 'react';
+import { ExpenseResponse, Expense } from '@/constant/type';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { useAuth } from '@/context/AuthContext';
+import expenseService from '@/services/expenses';
 
 export default function Expenses() {
+  const auth = useAuth();
   const [amount, setAmount] = useState<number>(0);
+  const [expenses, setExpenses] = useState<ExpenseResponse[]>([]);
+
+  useEffect(() => {
+    if (!auth.isAuthenticated) return;
+    const fetchExpenses = async () => {
+      const res = await expenseService.getAll(auth.user?.token as string);
+      setExpenses(res);
+    };
+    fetchExpenses();
+  }, [auth.isAuthenticated]);
+
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(parseInt(e.target.value));
   };
@@ -36,7 +50,9 @@ export default function Expenses() {
     },
   ];
 
-  const handleClick = () => {
+  const handleCreateExpense = async () => {
+    if (!auth.isAuthenticated) return;
+
     const category = (document.getElementById('category') as HTMLInputElement)
       .value;
     const isExpense =
@@ -44,6 +60,16 @@ export default function Expenses() {
       'true'
         ? true
         : false;
+
+    const newExpense: Expense = {
+      amount,
+      category,
+      isExpense,
+      user: auth.user?.token as string,
+      date: new Date().toISOString(),
+    };
+    await expenseService.create(newExpense, auth.user?.token as string);
+
     setTimeout(() => {
       const modal = document.getElementById('my_modal_6') as HTMLInputElement;
       modal.checked = false;
@@ -171,7 +197,7 @@ export default function Expenses() {
             <label htmlFor='my_modal_6' className='btn'>
               Close!
             </label>
-            <button onClick={handleClick} className='btn btn-primary'>
+            <button onClick={handleCreateExpense} className='btn btn-primary'>
               Save
             </button>
           </div>
