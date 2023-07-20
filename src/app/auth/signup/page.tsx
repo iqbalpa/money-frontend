@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { signup } from '@/services/users';
+import { signup } from '@/services/auth';
 import { User } from '../interface';
 import { useRouter } from 'next/navigation';
 

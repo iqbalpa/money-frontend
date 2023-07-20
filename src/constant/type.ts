@@ -19,6 +19,7 @@ export interface UserResponse {
   name: string;
   username: string;
   age: number;
+  token: string;
 }
 export interface ExpenseResponse {
   amount: number;
