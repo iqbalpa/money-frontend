@@ -16,9 +16,12 @@ const getById = async (id: string) => {
 };
 
 const create = async (expense: Expense, token: string) => {
+  console.log('token', token)
+  console.log('expense', expense)
   const response = await axios.post(BASE_URL, expense, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  console.log('response', response)
   return response.data;
 };
 

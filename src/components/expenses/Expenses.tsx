@@ -14,8 +14,12 @@ export default function Expenses() {
   useEffect(() => {
     if (!auth.isAuthenticated) return;
     const fetchExpenses = async () => {
-      const res = await expenseService.getAll(auth.user?.token as string);
-      setExpenses(res);
+      try {
+        const res = await expenseService.getAll(auth.user?.token as string);
+        setExpenses(res);
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchExpenses();
   }, [auth.isAuthenticated]);
@@ -23,32 +27,6 @@ export default function Expenses() {
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(parseInt(e.target.value));
   };
-  const dummyExpenses: ExpenseResponse[] = [
-    {
-      amount: 100000,
-      date: '2021-08-31T00:00:00.000Z',
-      category: 'Food',
-      isExpense: true,
-      userId: '1',
-      id: '1',
-    },
-    {
-      amount: 200000,
-      date: '2021-08-31T00:00:00.000Z',
-      category: 'Transport',
-      isExpense: true,
-      userId: '1',
-      id: '2',
-    },
-    {
-      amount: 300000,
-      date: '2021-08-31T00:00:00.000Z',
-      category: 'Salary',
-      isExpense: false,
-      userId: '1',
-      id: '3',
-    },
-  ];
 
   const handleCreateExpense = async () => {
     if (!auth.isAuthenticated) return;
@@ -68,7 +46,16 @@ export default function Expenses() {
       user: auth.user?.token as string,
       date: new Date().toISOString(),
     };
-    await expenseService.create(newExpense, auth.user?.token as string);
+    try {
+      const res = await expenseService.create(
+        newExpense,
+        auth.user?.token as string
+      );
+      setExpenses([...expenses, res]);
+      setAmount(0);
+    } catch (error) {
+      console.log(error);
+    }
 
     setTimeout(() => {
       const modal = document.getElementById('my_modal_6') as HTMLInputElement;
@@ -123,38 +110,42 @@ export default function Expenses() {
                   </tr>
                 </thead>
                 <tbody className='divide-y divide-gray-200'>
-                  {dummyExpenses.map((expense) => (
-                    <tr key={expense.id}>
-                      <td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800'>
-                        {expense.date.split('T')[0]}
-                      </td>
-                      {expense.isExpense ? (
-                        <td className='whitespace-nowrap px-6 py-4 text-sm text-red-600'>
-                          -{expense.amount}
+                  {expenses &&
+                    expenses.map((expense) => (
+                      <tr key={expense.id}>
+                        <td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800'>
+                          {expense.date.split('T')[0]}
                         </td>
-                      ) : (
-                        <td className='whitespace-nowrap px-6 py-4 text-sm text-green-600'>
-                          +{expense.amount}
+                        {expense.isExpense ? (
+                          <td className='whitespace-nowrap px-6 py-4 text-sm text-red-600'>
+                            -{expense.amount}
+                          </td>
+                        ) : (
+                          <td className='whitespace-nowrap px-6 py-4 text-sm text-green-600'>
+                            +{expense.amount}
+                          </td>
+                        )}
+                        <td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800'>
+                          {expense.category}
                         </td>
-                      )}
-                      <td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800'>
-                        {expense.category}
-                      </td>
-                      <td className='whitespace-nowrap px-6 py-4 text-right text-sm font-medium'>
-                        <a
-                          className='text-green-500 hover:text-green-700'
-                          href='#'
-                        >
-                          Edit
-                        </a>
-                      </td>
-                      <td className='whitespace-nowrap px-6 py-4 text-right text-sm font-medium'>
-                        <a className='text-red-500 hover:text-red-700' href='#'>
-                          Delete
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
+                        <td className='whitespace-nowrap px-6 py-4 text-right text-sm font-medium'>
+                          <a
+                            className='text-green-500 hover:text-green-700'
+                            href='#'
+                          >
+                            Edit
+                          </a>
+                        </td>
+                        <td className='whitespace-nowrap px-6 py-4 text-right text-sm font-medium'>
+                          <a
+                            className='text-red-500 hover:text-red-700'
+                            href='#'
+                          >
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
