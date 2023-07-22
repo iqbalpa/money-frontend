@@ -22,8 +22,10 @@ const create = async (expense: Expense, token: string) => {
   return response.data;
 };
 
-const update = async (id: string, data: any) => {
-  const response = await axios.patch(`${BASE_URL}/${id}`, data);
+const update = async (id: string, data: any, token: string) => {
+  const response = await axios.patch(`${BASE_URL}/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 

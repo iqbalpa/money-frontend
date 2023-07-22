@@ -1,6 +1,6 @@
 'use client';
 
-import React, { use, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ExpenseResponse, Expense } from '@/constant/type';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useAuth } from '@/context/AuthContext';
@@ -73,6 +73,59 @@ export default function Expenses() {
     }
   };
 
+  const [selectedExpenseId, setSelectedExpenseId] = useState<string>('');
+  const [updateAmount, setUpdateAmount] = useState<number>(0);
+  const handleUpdateAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUpdateAmount(parseInt(e.target.value));
+  };
+  const handleUpdateExpense = async (id: string) => {
+    const category = (
+      document.getElementById('update-category') as HTMLInputElement
+    ).value;
+    const isExpense =
+      (document.getElementById('update-isExpense') as HTMLInputElement)
+        .value === 'true'
+        ? true
+        : false;
+    const expense = expenses.find((expense) => expense.id === id);
+    if (!expense) return;
+    const updatedExpense = {
+      amount: updateAmount,
+      category,
+      isExpense,
+      date: expense.date,
+    };
+    try {
+      await expenseService.update(
+        id,
+        updatedExpense,
+        auth.user?.token as string
+      );
+
+      // update ui without fetching
+      setExpenses(
+        expenses.map((expense) => {
+          if (expense.id === id) {
+            return {
+              ...expense,
+              amount: updateAmount,
+              category,
+              isExpense,
+            };
+          }
+          return expense;
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+
+    setTimeout(() => {
+      const modal = document.getElementById('my_modal_7') as HTMLInputElement;
+      modal.checked = false;
+    }, 1000);
+  };
+
   return (
     <>
       <div className='flex max-w-3xl flex-col'>
@@ -139,12 +192,16 @@ export default function Expenses() {
                           {expense.category}
                         </td>
                         <td className='whitespace-nowrap px-6 py-4 text-right text-sm font-medium'>
-                          <a
-                            className='text-green-500 hover:text-green-700'
-                            href='#'
+                          <label
+                            htmlFor='my_modal_7'
+                            className='text-blue-500 hover:cursor-pointer hover:text-blue-700'
+                            onClick={() => {
+                              setSelectedExpenseId(expense.id);
+                              setUpdateAmount(expense.amount);
+                            }}
                           >
                             Edit
-                          </a>
+                          </label>
                         </td>
                         <td className='whitespace-nowrap px-6 py-4 text-right text-sm font-medium'>
                           <button
@@ -199,6 +256,54 @@ export default function Expenses() {
               Close!
             </label>
             <button onClick={handleCreateExpense} className='btn btn-primary'>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* MODAL */}
+      <input type='checkbox' id='my_modal_7' className='modal-toggle' />
+      <div className='modal'>
+        <div className='modal-box'>
+          <h3 className='mb-3 text-lg font-bold'>Update Record</h3>
+          <input
+            type='number'
+            placeholder='Amount'
+            className='input input-bordered mb-2 w-full max-w-lg'
+            onChange={handleUpdateAmountChange}
+            value={updateAmount}
+          />
+          <select
+            id='update-category'
+            className='mb-2 w-full max-w-lg rounded-lg border border-slate-300 py-3'
+          >
+            <option defaultChecked>Choose category</option>
+            <option value='salary'>Salary</option>
+            <option value='food'>Food</option>
+            <option value='transportation'>Transportation</option>
+            <option value='education'>Education</option>
+            <option value='entertainment'>Entertrainment</option>
+            <option value='others'>Others</option>
+          </select>
+          <select
+            id='update-isExpense'
+            className='w-full max-w-lg rounded-lg border border-slate-300 py-3'
+          >
+            <option defaultChecked>Choose type</option>
+            <option value='true'>Expense</option>
+            <option value='false'>Income</option>
+          </select>
+          <div className='modal-action flex flex-row justify-between'>
+            <label htmlFor='my_modal_7' className='btn'>
+              Close!
+            </label>
+            <button
+              onClick={() => {
+                handleUpdateExpense(selectedExpenseId);
+              }}
+              className='btn btn-primary'
+            >
               Save
             </button>
           </div>
