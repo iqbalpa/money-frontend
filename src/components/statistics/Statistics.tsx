@@ -1,14 +1,41 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import expenseService from '@/services/expenses';
+import { ExpenseResponse } from '@/constant/type';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Statistics() {
+  const auth = useAuth();
+  const [expenses, setExpenses] = useState<ExpenseResponse[]>([]);
+
   const MAX_PER_DAY = 1_000_000;
-  const todayExpense = 570_000;
+  const todayExpense = expenses.reduce((acc, expense) => {
+    const date = new Date(expense.date);
+    const today = new Date();
+    if (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    ) {
+      if (expense.isExpense) return acc + expense.amount;
+      else return acc - expense.amount;
+    }
+    return acc;
+  }, 0);
   const percentage = Math.round((todayExpense / MAX_PER_DAY) * 100);
+
+  useEffect(() => {
+    if (!auth.isAuthenticated) return;
+    const fetchExpenses = async () => {
+      const response = await expenseService.getAll(auth.user?.token as string);
+      setExpenses(response);
+    };
+    fetchExpenses();
+  }, [auth.isAuthenticated]);
 
   return (
     <>
