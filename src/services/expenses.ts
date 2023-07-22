@@ -16,12 +16,9 @@ const getById = async (id: string) => {
 };
 
 const create = async (expense: Expense, token: string) => {
-  console.log('token', token)
-  console.log('expense', expense)
   const response = await axios.post(BASE_URL, expense, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  console.log('response', response)
   return response.data;
 };
 
@@ -30,8 +27,10 @@ const update = async (id: string, data: any) => {
   return response.data;
 };
 
-const remove = async (id: string) => {
-  const response = await axios.delete(`${BASE_URL}/${id}`);
+const remove = async (id: string, token: string) => {
+  const response = await axios.delete(`${BASE_URL}/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 

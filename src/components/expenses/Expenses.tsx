@@ -63,6 +63,16 @@ export default function Expenses() {
     }, 3000);
   };
 
+  const handleDeleteExpense = async (id: string) => {
+    if (!auth.isAuthenticated) return;
+    try {
+      await expenseService.remove(id, auth.user?.token as string);
+      setExpenses(expenses.filter((expense) => expense.id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className='flex max-w-3xl flex-col'>
@@ -137,12 +147,12 @@ export default function Expenses() {
                           </a>
                         </td>
                         <td className='whitespace-nowrap px-6 py-4 text-right text-sm font-medium'>
-                          <a
+                          <button
                             className='text-red-500 hover:text-red-700'
-                            href='#'
+                            onClick={() => handleDeleteExpense(expense.id)}
                           >
                             Delete
-                          </a>
+                          </button>
                         </td>
                       </tr>
                     ))}
